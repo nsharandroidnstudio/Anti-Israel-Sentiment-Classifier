@@ -1,0 +1,6 @@
+setup.py
+IsraelSentimentAnalyzer.egg-info/PKG-INFO
+IsraelSentimentAnalyzer.egg-info/SOURCES.txt
+IsraelSentimentAnalyzer.egg-info/dependency_links.txt
+IsraelSentimentAnalyzer.egg-info/requires.txt
+IsraelSentimentAnalyzer.egg-info/top_level.txt
