@@ -1,4 +1,6 @@
 How to use the app:
+First, you need to run the main.py file this will start the server.
+
 Example 1: Classify Single Sentence
 python
 Copy code
