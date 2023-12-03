@@ -23,27 +23,20 @@ class AntiIsraelClassifier:
             bool: True if the sentence is classified as anti-Israeli, False otherwise.
         """
         input_prompt = (
-    "Task: Sentiment classification\n"
-    "Classes: pro israeli, anti Israeli\n"
-    "Context: You are designed to classify texts as either pro or anti Israeli. Your primary role is to analyze the tone, context, and language cues within a given text to determine its alignment. You will strictly adhere to the content of the text and avoid making assumptions or interpretations that extend beyond the explicit content. You will not provide opinions, political insights, or historical context, ensuring neutrality and factual analysis. In cases where the text is ambiguous or lacks clear indicators, you will state the uncertainty and refrain from arbitrary classification.\n"
-    "Labeled Examples:\n"
-    "Text: I Stand with Israel.\n"
-    "Label: pro israeli\n"
-    "Text: From the river to the sea, Palestine will be free.\n"
-    "Label: anti Israeli\n"
-    "Text: I love isreal!\n"
-    "Label pro isreali\n"
-    "Text: Critics argue that Israel's military actions disproportionately affect civilian populations.\n"
-    "Label: anti Israeli\n"
-    "Text: The Israeli Defense Forces (IDF) play a crucial role in ensuring national security, demonstrating a commitment to safeguarding the nation and its people.\n"
-    "Label: pro israeli\n"
-    "Text: Fuck gaza\n"
-    "Label: pro israeli"
-    "Please classify the sentiment of the following text:\n"
-    f"Sentence: '{sentence}'\n"
+    "Task:Sentiment classification Classes:pro israeli,anti Israeli\n"
+    "Context:Classify text as pro or anti-Israeli based on tone,context,and language cues.Adhere strictly to explicit content,avoiding assumptions or interpretations.Maintain neutrality,provide factual analysis,and refrain from offering opinions,political insights,or historical context. In ambiguous cases,note uncertainty make an arbitrary classification."
+    "Examples:\n"
+    "Text:From the river to the sea, Palestine will be free.\n"
+    "Label:anti Israeli\n"
+    "Text:I stand with isreal\n"
+    "Label:pro isreali\n"
+    "Text:hamas=isis\n"
+    "Label:pro israeli"
+    "Analyze sentiment in the text.\n"
+    f"text:'{sentence}'\n"
 )
 
-        output = self.model.generate(input_prompt, max_tokens=20, temp=self.temp)
+        output = self.model.generate(input_prompt, max_tokens=14, temp=self.temp)
         return "anti" in output.lower()
 
     
@@ -56,37 +49,28 @@ class AntiIsraelClassifier:
             sentence (str): The input sentence for sentiment analysis.
 
              Returns:
-            float: A sentiment score on the scale of -1 (indicating anti-Israel sentiment) to 1 (indicating pro-Israel sentiment).
+            float: A sentiment score on the scale of -1 (indicating anti-Israel sentiment)to 1(indicating pro-Israel sentiment).
             """
             input_prompt = (
-    "Task: Anti-Israeli Sentiment Scoring\n"
-    "Scoring Scale: -1 (Anti-Israel) to 1 (Pro-Israel)\n"
-    "Context: Provide a sentiment score for the given sentence, indicating the degree of anti-Israeli sentiment.Use a numerical scale where -1 represents anti-Israel sentiment, 0 is neutral, and 1 represents pro-Israel sentiment.\n"
-    "Scoring Examples:\n"
-    "Text: I Stand with Israel.\n"
-     "Score:0.99\n"
-    "Text: From the river to the sea, Palestine will be free.\n"
-    "Score:-0.99\n"
-    "Text: Critics argue that Israel's military actions disproportionately affect civilian populations.\n"
-    "Score:-0.9\n"
-    "Text: The Israeli Defense Forces (IDF) play a crucial role in ensuring national security, demonstrating a commitment to safeguarding the nation and its people.\n"
+    "Task:Sentiment scoring\n"
+    "Context:Score a sentence's sentiment on a scale from -1(anti-Israel)to 1(pro-Israel)considering tone,context,and language cues.\n"
+    "Examples:\n"
+    "Text:I Stand with Israel.\n"
+    "Score:1\n"
+    "Text:hamas=isis\n"
     "Score:0.9\n"
-    "Text: stop antisemitism"
-    "Score: 0.8"
-    "Text: Fuck gaza\n"
-    "Score:0.1\n"
-    "Text: I believe in Israel's right to exist and defend its borders against external threats.\n"
-    "Score:0.5"
-    "Score:The hostage deal must include the realse of isreali woman and children had by hamash and the realse of palstininen women and children that isreal snatch\n"
-    "Score:-0.6\n"
-    "The hostage deal must include the release of Israeli women and children held by Hamas and the release of Palestinian women and children that Israel has holds\n"
-    "Score:0.3\n"
+    "Text:stop antisemitism\n"
+    "Score:0.8\n"
     "Israel is doing a genocide to the Palestinian\n"
-    "Score:-0.95"
-    "Please Give a sentiment score following text:\n"
-    f"Sentence: {sentence}\n"
+    "Score:-1"
+    "Text:Stop isreal occupation they making a PROPAGANDA\n"
+    "Score:-0.8\n"
+    "Text:From the river to the sea Palestinian will be free\n"
+    "Score:-1\n"
+    "give a score for the text.\n"
+    f"text:{sentence}\n"
 )
    
 
-            output = self.model.generate(input_prompt, max_tokens=20, temp=self.temp)
+            output = self.model.generate(input_prompt, max_tokens=14, temp=self.temp)
             return output
