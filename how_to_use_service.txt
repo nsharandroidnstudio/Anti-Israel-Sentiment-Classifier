@@ -2,30 +2,32 @@ How to use the app:
 First, you need to run the main.py file this will start the server.
 
 Example 1: Classify Single Sentence
-python
-Copy code
 import requests
 
 # Define the API endpoint
 api_url = "http://localhost:8000/AntiIsraelClassifier/OneSentence"
 
 # Example sentence
-sentence_data = {"sentence": "I support the Israeli government"}
+sentence_data = {"sentence": "I Stand with I Israel "}
 
 # Make a POST request to the API
 response = requests.post(api_url, json=sentence_data)
-
 # Print the response
+'''
 print(response.json())
-
+{
+    "sentence": "I Stand with I Israel ",
+    "is_anti_israel": false,
+    "probability": 0.9375939850922856
+}
+'''
 
 api_url = "http://localhost:8000/AntiIsraelClassifier/MultipleSentences"
 
 # Example 2 multiple sentences
 multiple_sentences_data = {"list_of_sentences": [
-    "I support the Israeli government",
-    "I am against the policies of Israel",
-    "The conflict in the Middle East is complex"
+    "Israel is reinforcing humanitarian aid to Gaza.",
+    "I stand with Israel",
 ]}
 
 # Make a POST request to the API
@@ -33,26 +35,17 @@ response = requests.post(api_url, json=multiple_sentences_data)
 
 # Print the response
 print(response.json())
+[
+    {
+        "Sentence": "Israel is reinforcing humanitarian aid to Gaza.",
+        "Is it anti-Israeli": false,
+        "Probability": 0.8855164414656403
+    },
+    {
+        "Sentence": "I stand with isreal!",
+        "Is it anti-Israeli": false,
+        "Probability": 0.7003705708058939
+    }
+]
 
-Example 3: Scoring Multiple Sentences
-python
-Copy code
-import requests
 
-# Define the API endpoint
-api_url = "http://localhost:8000/Scoring_Anti_pro_isreali/MultipleSentences"
-
-# Example sentences
-multiple_sentences_data = {"list_of_sentences": [
-    "I support the Israeli government",
-    "I am against the policies of Israel",
-    "The conflict in the Middle East is complex"
-]}
-
-# Make a POST request to the API
-response = requests.post(api_url, json=multiple_sentences_data)
-
-# Print the response
-print(response.json())
-
-Make sure to replace "http://localhost:8000" with the actual URL where your FastAPI server is running. Adjust the sentences in the examples based on your needs.
