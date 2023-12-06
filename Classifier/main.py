@@ -1,11 +1,10 @@
 from typing import List
-from classifier import AntiIsraelClassifier
+from classifier import AntiIsraelClassifierModelSetFit
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI()
-classifier = AntiIsraelClassifier()
-
+classifierSetfit = AntiIsraelClassifierModelSetFit()
 class One_Sentence(BaseModel):
     sentence: str
 
@@ -31,9 +30,12 @@ def classify_sentence(one_sentence: One_Sentence):
             raise HTTPException(status_code=400, detail="Sentence parameter is required.")
 
         text_data = one_sentence.sentence
-        is_anti_israel = classifier.classify_Is_it_anti_pro_isreali(text_data)
-        return {"sentence": text_data, "Is it anti-Israeli": is_anti_israel}
-
+        is_anti_israel,probability = classifierSetfit.classify_Is_it_anti_pro_isreali(text_data)
+        return {
+        "sentence": text_data,
+        "is_anti_israel": is_anti_israel,
+        "probability": probability
+    }
     except Exception as e:
         return {"error": str(e)}
 
@@ -56,62 +58,15 @@ def classify_multiple_sentences(Multiple_Sentence: Multiple_Sentnces):
         sentences = Multiple_Sentence.list_of_sentences
         classification_responses = []
         for sentence in sentences:
-            is_anti_israel = classifier.classify_Is_it_anti_pro_isreali(sentence)
-            classification_responses.append({"Sentence": sentence, "Is it anti-Israeli": is_anti_israel})
+            is_anti_israel,probability = classifierSetfit.classify_Is_it_anti_pro_isreali(sentence)
+            classification_responses.append({
+            "Sentence": sentence,
+            "Is it anti-Israeli": is_anti_israel,
+            "Probability": probability
+            })
 
         return classification_responses
 
     except Exception as e:
         return {"error": str(e)}
 
-@app.post("/Scoring_Anti_pro_isreali/MultipleSentences", response_model=list[dict])
-def Scoring_multiple_sentences(Multiple_Sentence: Multiple_Sentnces):
-    """
-    Score multiple sentences.
-
-    Args:
-        multiple_sentences (Multiple_Sentences): Request model containing a list of sentences to be scored.
-        content_type (str): Header parameter.
-
-    Returns:
-        dict: JSON response containing the scoring results.
-    """
-    try:
-        if not Multiple_Sentence.list_of_sentences:
-            raise HTTPException(status_code=400, detail="Sentence parameter is required and must be a list of sentences.")
-
-        sentences = Multiple_Sentence.list_of_sentences
-        classification_responses = []
-        for sentence in sentences:
-            score = classifier.Scoring_Scale_anti_pro_isreali(sentence)
-            key, score = score.split(':')
-
-            classification_responses.append({"Sentence": sentence, "score": score})
-
-        return classification_responses
-
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.post("/Scoring_Anti_pro_isreali/OneSentence", response_model=dict)
-def classify_sentence(one_sentence: One_Sentence):
-    """
-    Classify the sentiment of the given sentence.
-
-    Args:
-        one_sentence (One_Sentence): Request model containing the sentence to be classified.
-
-    Returns:
-        dict: JSON response containing the scoring results.
-    """
-    try:
-        if one_sentence.sentence is None:
-            raise HTTPException(status_code=400, detail="Sentence parameter is required.")
-
-        text_data = one_sentence.sentence
-        score = classifier.Scoring_Scale_anti_pro_isreali(text_data)
-        key, score = score.split(':')
-        return {"sentence": text_data, "score": score}
-
-    except Exception as e:
-        return {"error": str(e)}
